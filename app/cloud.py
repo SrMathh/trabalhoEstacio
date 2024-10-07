@@ -6,7 +6,7 @@ class Cloud:
     
     def set_credentials():
         """Define o caminho para o arquivo JSON de credenciais do Google Cloud."""
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/home/noclaf/Documentos/pyton/bigData/json/bigdata-436913-05b3d371b5d4.json"
+        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/home/noclaf/Documentos/pyton/TrabalhoExtenção/venv/json/bigdata-436913-1c5d89fa570d.json"
 
     def get_info_tere():
         """Busca informações gerais sobre as estações meteorológicas de Teresópolis."""
@@ -58,7 +58,8 @@ class Cloud:
         """
 
         # Executar a consulta e armazenar o resultado em um DataFrame
-        df = client.query(query).to_dataframe()
+        df = client.query(query).to_dataframe(create_bqstorage_client=True)
+
 
         # Remover valores NaN e converter a coluna 'data' para datetime
         df = df.dropna()
@@ -72,10 +73,9 @@ class Cloud:
         df_sorted['data'] = df_sorted['data'].dt.strftime('%d-%m-%Y')
 
         # Salvar os dados em um arquivo Excel
-        df_sorted.to_excel('dados_ordenados.xlsx', index=False, engine='openpyxl')
-
-        # Exibir as primeiras linhas dos microdados da estação específica
-        print("Microdados da estação específica:")
-        print(df_sorted.head())
+        #df_sorted.to_excel('dados_ordenados.xlsx', index=False, engine='openpyxl')
+        
+        # Salvar os dados em um arquivo CSV
+        df_sorted.to_csv('dados_ordenados.csv', index=False)
 
         return df_sorted
